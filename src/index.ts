@@ -20,12 +20,12 @@ const server = http.createServer(
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.user.create({
-    data: {
-      name: "Miso"
-    }
-  })
-  console.log(await prisma.user.findMany())
+  // await prisma.user.create({
+  //   data: {
+  //     name: "Miso"
+  //   }
+  // })
+  console.log(await prisma.Profiles.findMany())
 }
 
 main()

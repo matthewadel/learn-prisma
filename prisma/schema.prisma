@@ -13,7 +13,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
-  id   Int    @id @default(autoincrement())
-  name String
+model Users {
+  id             String    @id @default(uuid())
+  name           String
+  email          String    @unique
+  role           UserRoles @default(User)
+  hobbies        Json
+  posts          Posts[]   @relation("writtenPosts")
+  favorite_posts Posts[]   @relation("favoritePosts")
+  profile        Profiles? @relation("profile")
+
+  @@index([email])
+}
+
+model Profiles {
+  id               String  @id @default(uuid())
+  bio              String?
+  emailUpdates     Boolean @default(false)
+  profile_relation Users   @relation("profile", fields: [user_id], references: [id])
+  user_id          String  @unique
+}
+
+model Posts {
+  id                    String     @id @default(uuid())
+  rating                Float
+  created_at            DateTime   @default(now())
+  updated_at            DateTime   @updatedAt
+  user_relation         Users      @relation("writtenPosts", fields: [user_id], references: [id])
+  user_id               String
+  favorited_by_relation Users?     @relation("favoritePosts", fields: [favorited_by_id], references: [id])
+  favorited_by_id       String?
+  categories            Category[]
+}
+
+model Category {
+  id    String  @id @default(uuid())
+  name  String
+  posts Posts[]
+}
+
+enum UserRoles {
+  User
+  ADMIN
 }

@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import * as http from "http";
 
 const server = http.createServer(
@@ -16,6 +17,22 @@ const server = http.createServer(
   }
 );
 
+const prisma = new PrismaClient();
+
+async function main() {
+  await prisma.user.create({
+    data: {
+      name: "Miso"
+    }
+  })
+  console.log(await prisma.user.findMany())
+}
+
+main()
+  .catch(async (e) => {
+    console.log(e)
+    prisma.$disconnect()
+  })
 const PORT = 5001;
 
 server.listen(PORT, () => {
